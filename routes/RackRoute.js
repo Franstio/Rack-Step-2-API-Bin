@@ -1,5 +1,5 @@
 import express from "express";
-import {rackOpen} from "../controllers/RackDoor.js"
+import {rackOpen} from "../controllers/TriggerRack.js"
 
 
 const router = express.Router();

@@ -1,10 +1,5 @@
-import ModbusRTU from 'modbus-serial';
-
-const client = new ModbusRTU();
-client.connectRTU("/dev/ttyUSB0", { baudRate: 9600 });
-// set timeout, if slave did not reply back
+import client from '../controllers/TriggerLock.js';
 client.setTimeout(5000);
-
 
 export const rackOpen = async (req, res) => {
     try {

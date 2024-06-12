@@ -3,19 +3,18 @@ client.setTimeout(5000);
 
 
 export const SensorRack = async (req, res) => {
-    const { SensorId } = req.query;
+    const { clientId, address } = req.query;
     console.log(SensorId);
     let receivedValue = null;
     try {
-        client.setID(SensorId);
+        client.setID(clientId);
         if (!client.isOpen) {
             client.open(() => {
                 console.log("modbus open");
             });
         }
 
-        const address = 0;
-
+        //const address = address;
         const response = await client.readHoldingRegisters(address, 1);
         receivedValue = response.data[0];
 

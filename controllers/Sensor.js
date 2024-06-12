@@ -4,7 +4,7 @@ client.setTimeout(5000);
 
 export const SensorRack = async (req, res) => {
     const { clientId, address } = req.query;
-    console.log(address);
+    console.log([clientId,address]);
     let receivedValue = null;
     try {
         client.setID(clientId);

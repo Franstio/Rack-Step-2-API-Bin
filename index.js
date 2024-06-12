@@ -28,9 +28,10 @@ const io = new Server(server, {
 
 io.on('connection',(socket)=>{
     console.log("listening socket.io");
-
-  
 });
+
+
+
 app.use(cors({
   origin: '*', // Allow any origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods

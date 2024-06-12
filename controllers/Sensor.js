@@ -16,6 +16,7 @@ export const SensorRack = async (req, res) => {
 
         //const address = address;
         const response = await client.readHoldingRegisters(address, 1);
+        console.log({response:response.data});//tolong push ri.
         receivedValue = response.data[0];
 
         res.status(200).json({ sensorrack: receivedValue });

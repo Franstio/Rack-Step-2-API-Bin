@@ -49,8 +49,8 @@ app.use(TriggerRack);
 server.listen(port, () => {
   console.log(`Server up and running on port ${port}`);
 });
-//checkLampRed();
+checkLampRed();
 
-//observeSensor(io);
-//checkLampYellow();
+observeSensor(io);
+checkLampYellow();
 export {io};

@@ -7,6 +7,10 @@ export default client;
 
 
 export const lockTop = async (req, res) => {
+    let c = 0;
+    let err = '';
+    while (c<=10)
+    {
     try {
         const {idLockTop} = req.body;
         console.log(idLockTop);
@@ -19,14 +23,21 @@ export const lockTop = async (req, res) => {
         const address = 4;
         const value = 1;
         const log = await client.writeRegister(address,value);
-        res.status(200).json({ msg: `Rack Telah Dibuka` });
+        return res.status(200).json({ msg: `Rack Telah Dibuka` });
 
     } catch (error) {
-        res.status(500).json({ msg: error });
+        c=c+1;
+        err = error;
     }
+    }
+    return res.status(500).json({ msg: err });
 };
 
 export const lockBottom = async (req, res) => {
+    let c = 0;
+    let err='';
+    while (c<=10)
+    {
     try {
         const {idLockBottom} = req.body;
 	//console.log({id: idRollingDoor});
@@ -49,11 +60,14 @@ export const lockBottom = async (req, res) => {
         } else {
             res.status(200).json({ msg: `Kunci dengan address ${address} berhasil ditutup.` });
         } */
-        res.status(200).json({ msg: `Bottom Lock diBuka` });
+        return res.status(200).json({ msg: `Bottom Lock diBuka` });
 
     } catch (error) {
-        res.status(500).json({ msg: error });
+        err = error;
+        c = c+1;
     }
+    }
+    return         res.status(500).json({ msg: err });
 };
 
 export const getHostname = async (req,res) =>{

@@ -214,20 +214,20 @@ export const observeSensor = async (_io)=>  {
         await checkLampRed();
 
         const topRes = await readCmd(0, 1);
-        await UpdateSensor(topRes.data[0]);
+        await UpdateSensor(0, topRes.data[0],_io);
        // await new Promise((resolve)=> setTimeout(resolve,100) );
         const bottomRes = await readCmd(1,1);
-        await UpdateSensor(bottomRes.data[0]);
+        await UpdateSensor(1,bottomRes.data[0],_io);
         const redLamp = await readCmd(6,1);
-        await UpdateSensor(redLamp.data[0]);
+        await UpdateSensor(2,redLamp.data[0],_io);
         const yellowLamp = await readCmd(7,1);
-        await UpdateSensor(yellowLamp.data[0]);
+        await UpdateSensor(3,yellowLamp.data[0],_io);
         const greenLamp = await readCmd(8,1);
-        await UpdateSensor(greenLamp.data[0]);
+        await UpdateSensor(4,greenLamp.data[0],_io);
         const locktop = await readCmd(4,1);
-        await UpdateSensor(locktop.data[0]);
+        await UpdateSensor(5,locktop.data[0],_io);
         const lockbottom = await readCmd(5,1);
-        await UpdateSensor(lockbottom.data[0]);
+        await UpdateSensor(6,lockbottom.data[0],_io);
         const topResValue = topRes.data[0];
         const bottomResValue = bottomRes.data[0];
         console.log("topres value: "+topResValue+" ,bottomres value: " + bottomResValue + ", target top:" + topSensor + " , target bottom: " + bottomSensor);

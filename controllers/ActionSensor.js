@@ -1,6 +1,8 @@
-import client from '../controllers/TriggerLock.js';
+import client from './PLCUtil.js';
 import { io } from '../index.js';
-client.setTimeout(5000);
+import { checkLampRed } from './Bin.js';
+import { readCmd, writeCmd } from './PLCUtil.js';
+client.setTimeout(3000);
 
 let bottomSensor=null;
 let topSensor=null;
@@ -9,16 +11,16 @@ export const SensorTop = async (req, res) => {
     console.log(SensorTopId);
     let receivedValue = null;
     try {
-        client.setID(SensorTopId);
+/*        client.setID(SensorTopId);
         if (!client.isOpen) {
             client.open(() => {
                 console.log("modbus open");
             });
-        }
+        }*/
 
         const address = 0;
 
-        const response = await client.readHoldingRegisters(address, 1);
+        const response = await readCmd(address, 1);
         receivedValue = response.data[0];
 
         res.status(200).json({ sensorTop: receivedValue });
@@ -32,16 +34,16 @@ export const SensorBottom = async (req, res) => {
     const { SensorBottomId } = req.body;
     console.log(SensorBottomId);
     try {
-        client.setID(SensorBottomId);
+/*        client.setID(SensorBottomId);
         if (!client.isOpen) {
             client.open(() => {
                 console.log("modbus open");
             });
-        }
+        }*/
 
         const address = 1;
 
-        const response = await client.readHoldingRegisters(address, 1);
+        const response = await readCmd(address, 1);
         const receivedValue = response.data[0];
 
         res.status(200).json({ sensorBottom: receivedValue });
@@ -51,11 +53,7 @@ export const SensorBottom = async (req, res) => {
 };
 let idInterval= null;
 export const observeBottomSensor = async (req, res) => {
-    if (idInterval != null)
-        return res.status(200).json({msg: "Target Already Started"});
     const { readTarget } = req.body;
-    if (!readTarget)
-        return res.status(200).json({msg: "Target not found"});
     bottomSensor = readTarget;
 /*    client.setID(1);
      idInterval = setInterval(async () => {
@@ -87,11 +85,7 @@ export const observeBottomSensor = async (req, res) => {
 }
 
 export const observeTopSensor = async (req, res) => {
-    if (idInterval != null)
-        return res.status(200).json({msg: "Target Already Started"});
     const { readTargetTop } = req.body;
-    if (!readTargetTop)
-        return res.status(200).json({msg: "Target not found"});
     topSensor = readTargetTop;
 /*    client.setID(1);
      idInterval = setInterval(async () => {
@@ -164,53 +158,88 @@ export const observeTopSensorIndicator = async (req, res) => {
     res.status(200).json({msg:'ok'});
 }
 */
+const SensorData = [0,0,0,0,0,0,0];
+const PayloadData = [];
+export const PushPayload =  (data)=>{
+    if (!data.id || !data.address || !data.value)
+        return;
+    PayloadData.push(data);
+}
+const executePayload = async ()=>{
+    const payload = [...PayloadData];
+    for (let i=0;i<payload.length;i++)
+    {
+        await writeCmd(payload[i]);
+    }
+    client.setID(1);
+    PayloadData = [];
+}
+const UpdateSensor = async (index,data,_io)=>{
+    await executePayload();
+    if (index < 0 || index > SensorData.length-1)
+        return;
+    SensorData[index] = data;
+    _io.emit("sensorUpdate",SensorData);
+    const topResValue = SensorData[0];
+    const bottomResValue = SensorData[1];
+    if (topSensor != null && topResValue == topSensor )
+    {
+        const target = 'target-top-'+topSensor;
+        topSensor= null;
+//            clearInterval(idInterval);
+        _io.emit(target,true);
+    }
+    if ( bottomSensor != null && bottomResValue == bottomSensor )
+    {
+        const target = 'target-'+bottomSensor;
+        bottomSensor = null;
+
+        _io.emit(target,true);
+    }
+}
 
 export const observeSensor = async (_io)=>  {
+    if (!client.isOpen) {
+        client.open(() => {
+            console.log("modbus open");
+        });
+    }
     while(true)
     {
     try {
+        await executePayload();
         client.setID(1);
-        if (!client.isOpen) {
-            client.open(() => {
-                console.log("modbus open");
-            });
-        }
-        
 
-        const topRes = await client.readHoldingRegisters(0, 1);
+        
+        await checkLampRed();
+
+        const topRes = await readCmd(0, 1);
+        await UpdateSensor(topRes.data[0]);
        // await new Promise((resolve)=> setTimeout(resolve,100) );
-        const bottomRes = await client.readHoldingRegisters(1,1);
-        const redLamp = await client.readHoldingRegisters(6,1);
-        const yellowLamp = await client.readHoldingRegisters(7,1);
-        const greenLamp = await client.readHoldingRegisters(8,1);
-        const locktop = await client.readHoldingRegisters(4,1);
-        const lockbottom = await client.readHoldingRegisters(5,1);
+        const bottomRes = await readCmd(1,1);
+        await UpdateSensor(bottomRes.data[0]);
+        const redLamp = await readCmd(6,1);
+        await UpdateSensor(redLamp.data[0]);
+        const yellowLamp = await readCmd(7,1);
+        await UpdateSensor(yellowLamp.data[0]);
+        const greenLamp = await readCmd(8,1);
+        await UpdateSensor(greenLamp.data[0]);
+        const locktop = await readCmd(4,1);
+        await UpdateSensor(locktop.data[0]);
+        const lockbottom = await readCmd(5,1);
+        await UpdateSensor(lockbottom.data[0]);
         const topResValue = topRes.data[0];
         const bottomResValue = bottomRes.data[0];
         console.log("topres value: "+topResValue+" ,bottomres value: " + bottomResValue + ", target top:" + topSensor + " , target bottom: " + bottomSensor);
         console.log([topResValue,bottomResValue,redLamp.data[0],yellowLamp.data[0],greenLamp.data[0],locktop.data[0],lockbottom.data[0]]);
-        _io.emit("sensorUpdate",[topResValue,bottomResValue,redLamp.data[0],yellowLamp.data[0],greenLamp.data[0],locktop.data[0],lockbottom.data[0]]);
-        if (topSensor != null && topResValue == topSensor )
-        {
-            const target = 'target-top-'+topSensor;
-            topSensor= null;
-//            clearInterval(idInterval);
-            _io.emit(target,true);
-        }
-        if ( bottomSensor != null && bottomResValue == bottomSensor )
-        {
-            const target = 'target-'+bottomSensor;
-            bottomSensor = null;
-
-            _io.emit(target,true);
-        }
+ 
     }
     catch (err) {
         console.log(err);
     }
     finally
     {
-        await new Promise((resolve)=> setTimeout(resolve,500) );
+        await new Promise((resolve)=> setTimeout(resolve,10) );
     }
 }
 };

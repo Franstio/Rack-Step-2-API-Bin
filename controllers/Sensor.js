@@ -1,4 +1,5 @@
-import client from '../controllers/TriggerLock.js';
+import client from './PLCUtil.js';
+import { readCmd } from './PLCUtil.js';
 client.setTimeout(5000);
 
 
@@ -15,8 +16,7 @@ export const SensorRack = async (req, res) => {
         }
 
         //const address = address;
-        const response = await client.readHoldingRegisters(address, 1);
-        console.log({response:response.data});//tolong push ri.
+        const response = await readCmd(address, 1);
         receivedValue = response.data[0];
 
         res.status(200).json({ sensorrack: receivedValue });

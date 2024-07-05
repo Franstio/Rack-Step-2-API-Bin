@@ -159,7 +159,7 @@ export const observeTopSensorIndicator = async (req, res) => {
 }
 */
 const SensorData = [0,0,0,0,0,0,0];
-const PayloadData = [];
+let PayloadData = [];
 export const PushPayload =  (data)=>{
     if (!data.id || !data.address || !data.value)
         return;

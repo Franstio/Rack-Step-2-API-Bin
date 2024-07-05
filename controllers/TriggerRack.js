@@ -1,5 +1,5 @@
 import { PushPayload } from "./ActionSensor.js";
-client.setTimeout(5000);
+
 
 export const rackOpen = async (req, res) => {
     try {

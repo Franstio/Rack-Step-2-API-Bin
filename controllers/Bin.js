@@ -1,5 +1,4 @@
 import axios from 'axios';
-import client from '../controllers/TriggerLock.js';
 import os from 'os';
 import { io } from '../index.js';
 import { writeCmd } from './PLCUtil.js';

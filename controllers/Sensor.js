@@ -5,13 +5,11 @@ client.setTimeout(5000);
 
 export const SensorRack = async (req, res) => {
     const { clientId, address } = req.query;
-    console.log([clientId,address]);
     let receivedValue = null;
     try {
         client.setID(clientId);
         if (!client.isOpen) {
             client.open(() => {
-                console.log("modbus open");
             });
         }
 
@@ -21,7 +19,6 @@ export const SensorRack = async (req, res) => {
 
         res.status(200).json({ sensorrack: receivedValue });
     } catch (error) {
-        console.log(error);
         res.status(200).json({ sensorrack: receivedValue });
     }
 };

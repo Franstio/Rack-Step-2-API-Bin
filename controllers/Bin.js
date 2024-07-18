@@ -15,7 +15,6 @@ export const switchLamp = async (id, lampType, isAlive) => {
         await writeCmd({id:1,address:address,value: isAlive ? 1 : 0});
     }
     catch (error) {
-        console.log([error, id, lampType, address, isAlive]);
     }
     await new Promise(resolve => setTimeout(function () { return resolve(); }, 10));
 };
@@ -26,14 +25,11 @@ export const checkLampRed = async () => {
         const response = await axios.get(`http://${process.env.TIMBANGAN}/getbinData?hostname=${os.hostname()}`, { withCredentials: false,timeout: 500 });
         const bin = response.data.bin;
             
-        console.log({ weight :bin.weight,max:bin.max_weight });
         const limit = (parseFloat(bin.max_weight) /100) * 100;
         if (bin && parseFloat(bin.weight) >= limit) {
-            //console.log("Turn on Red");
             await switchLamp(bin.id, 'RED', true);
             await switchLamp(bin.id, 'YELLOW', false);
         } else {
-            //console.log("Turn off Red");
             await switchLamp(bin.id, 'RED', false);
             await switchLamp(bin.id, 'YELLOW', true);
         }
@@ -49,7 +45,6 @@ export const checkLampYellow = async () => {
         try {
             const response = await axios.get(`http://${process.env.TIMBANGAN}/getbinData?hostname=${os.hostname()}`, { withCredentials: false });
             const bin = response.data;
-            console.log({ binFromApi: bin });
             
             if (parseFloat(bin.weight) > parseFloat(bin.max_weight)) {
                 await switchLamp(bin.id, 'YELLOW', false);
@@ -70,14 +65,12 @@ export const checkLampYellow = async () => {
 
 export const receiveInstruksi = async (req,res) =>{
     const {instruksi} = req.body ;
-    console.log({instruksi:instruksi});
     io.emit('UpdateInstruksi', instruksi);
     res.status(200).json({msg:'ok'});
 }
 
 export const receiveType = async (req,res) =>{
     const {type} = req.body ;
-    console.log({type:type});
     io.emit('GetType', type);
     res.status(200).json({msg:'ok'});
 }

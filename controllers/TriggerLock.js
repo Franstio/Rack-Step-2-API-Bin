@@ -5,7 +5,6 @@ import os from 'os';
 export const lockTop = async (req, res) => {
     try {
         const {idLockTop} = req.body;
-        console.log(idLockTop);
         const address = 4;
         const value = 1;
         PushPayload({id:idLockTop,address:address,value:value});
@@ -19,13 +18,11 @@ export const lockTop = async (req, res) => {
 export const lockBottom = async (req, res) => {
     try {
         const {idLockBottom} = req.body;
-	//console.log({id: idRollingDoor});
 
         const address = 5;
         const value = 1;
         PushPayload({id:idLockBottom,address:address,value:value});
 //        const data = await client.readHoldingRe  gisters(address, 8);
-//        console.log({ log: log, data: data });
        /*  if (value === 1) {
             res.status(200).json({ msg: `Top Lock diBuka` });
         } else {

@@ -4,14 +4,11 @@ import { writeCmd } from './PLCUtil.js';
 export const REDLampOn = async (req, res) => {
     try {
         const {idLockTop} = req.body;
-        console.log(idLockTop);
-	//console.log({id: idRollingDoor});
 
         const address = 6;
         const value = 1;
         PushPayload({id:idLockTop,address:address,value:value});
 //        const data = await client.readHoldingRegisters(address, 8);
-//        console.log({ log: log, data: data });
        /*  if (value === 1) {
             res.status(200).json({ msg: `Top Lock diBuka` });
         } else {
@@ -27,14 +24,11 @@ export const REDLampOn = async (req, res) => {
 export const REDLampOff = async (req, res) => {
     try {
         const {idLockTop} = req.body;
-        console.log(idLockTop);
-	//console.log({id: idRollingDoor});
 
         const address = 6;
         const value = 0;
         PushPayload({id:idLockTop,address:address,value:value});
 //        const data = await client.readHoldingRegisters(address, 8);
-//        console.log({ log: log, data: data });
        /*  if (value === 1) {
             res.status(200).json({ msg: `Top Lock diBuka` });
         } else {
@@ -54,7 +48,6 @@ export const YELLOWLampOn = async (req, res) => {
         const value = 1;
         PushPayload({id:idLampYellow,address:address,value:value});
 //        const data = await client.readHoldingRegisters(address, 8);
-//        console.log({ log: log, data: data });
        /*  if (value === 1) {
             res.status(200).json({ msg: `Top Lock diBuka` });
         } else {
@@ -74,7 +67,6 @@ export const YELLOWLampOff = async (req, res) => {
         const value = 0;
         PushPayload({id:idLampYellow,address:address,value:value});
 //        const data = await client.readHoldingRegisters(address, 8);
-//        console.log({ log: log, data: data });
        /*  if (value === 1) {
             res.status(200).json({ msg: `Top Lock diBuka` });
         } else {
@@ -90,12 +82,10 @@ export const YELLOWLampOff = async (req, res) => {
 export const GREENLampOn = async (req, res) => {
     try {
         const {idLampGreen} = req.body;
-        console.log(idLampGreen);
         const address = 8;
         const value = 1;
         PushPayload({id:idLampGreen,address:address,value:value});
 //        const data = await client.readHoldingRegisters(address, 8);
-//        console.log({ log: log, data: data });
        /*  if (value === 1) {
             res.status(200).json({ msg: `Top Lock diBuka` });
         } else {
@@ -115,7 +105,6 @@ export const GREENLampOff = async (req, res) => {
         const value = 0;
         PushPayload({id:idLampGreen,address:address,value:value});
 //        const data = await client.readHoldingRegisters(address, 8);
-//        console.log({ log: log, data: data });
        /*  if (value === 1) {
             res.status(200).json({ msg: `Top Lock diBuka` });
         } else {
@@ -140,6 +129,5 @@ export const switchLamp = async (id, lampType, isAlive) => {
         await writeCmd({id:id,address:address,value: isAlive ? 1 : 0});
     }
     catch (error) {
-        console.log([error, id, lampType, address, isAlive]);
     }
 }

@@ -153,12 +153,12 @@ export const PushPayload =  (data)=>{
 }
 const executePayload = async ()=>{
     const payload = [...PayloadData];
+    PayloadData = [];
     for (let i=0;i<payload.length;i++)
     {
         await writeCmd(payload[i]);
     }
     client.setID(1);
-    PayloadData = [];
 }
 const UpdateSensor = async (index,data,_io)=>{
     await executePayload();

@@ -34,7 +34,7 @@ export const checkLampRed = async () => {
             await switchLamp(bin.id, 'YELLOW', true);
         }
     } catch (error) {
-        console.error('Error fetching bin data:', error);
+        console.error('Error fetching bin data');
     }
 
 //    await new Promise(resolve => setTimeout(resolve, 10));

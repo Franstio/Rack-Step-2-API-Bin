@@ -1,7 +1,6 @@
 import ModbusRTU from 'modbus-serial';
 const client = new ModbusRTU();
 client.connectRTU("/dev/ttyUSB0", { baudRate: 9600 });
-client.setTimeout(100); 
 
 export default client;
 
@@ -22,6 +21,7 @@ export const readCmd =  async (address,val) =>
 export const writeCmd = async (data) => {
     try
     {
+        client.setTimeout(100); 
         client.setID(data.id);
         await client.writeRegister(data.address,data.value);
         return;

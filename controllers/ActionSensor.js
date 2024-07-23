@@ -197,7 +197,7 @@ export const observeSensor = async (_io)=>  {
         client.setID(1);
 
         
-        await checkLampRed();
+//        await checkLampRed();
 
         const topRes = await readCmd(0, 1);
         await UpdateSensor(0, topRes.data[0],_io);

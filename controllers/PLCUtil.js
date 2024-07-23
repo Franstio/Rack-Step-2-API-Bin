@@ -28,6 +28,7 @@ export const writeCmd = async (data) => {
     }
     catch(err)
     {
+        console.log('Executing ' + data.address + ' ,value ' + data.value);
         await new Promise((resolve) => setTimeout(resolve,100));
         await writeCmd(data);
     }

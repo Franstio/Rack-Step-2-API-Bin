@@ -1,7 +1,7 @@
 import ModbusRTU from 'modbus-serial';
 const client = new ModbusRTU();
 client.connectRTU("/dev/ttyUSB0", { baudRate: 9600 });
-client.setTimeout(5000); 
+client.setTimeout(2000); 
 
 export default client;
 
@@ -15,7 +15,7 @@ export const readCmd =  async (address,val) =>
     }
     catch
     {
-        await new Promise((resolve) => setTimeout(resolve,100));
+        await new Promise((resolve) => setTimeout(resolve,10));
         return await readCmd(address,val);
     }
 }
@@ -28,7 +28,7 @@ export const writeCmd = async (data) => {
     }
     catch(err)
     {
-        await new Promise((resolve) => setTimeout(resolve,100));
+        await new Promise((resolve) => setTimeout(resolve,10));
         await writeCmd(data);
     }
 }

@@ -156,6 +156,7 @@ const executePayload = async ()=>{
     PayloadData = [];
     for (let i=0;i<payload.length;i++)
     {
+        console.log('--payload--'+JSON.stringify(payload[i]));
         await writeCmd(payload[i]);
     }
     client.setID(1);

@@ -22,7 +22,7 @@ export const switchLamp = async (id, lampType, isAlive) => {
 export const checkLampRed = async () => {
     
     try {
-        const response = await axios.get(`http://${process.env.TIMBANGAN}/getbinData?hostname=${os.hostname()}`, { withCredentials: false,timeout: 500 });
+        const response = await axios.get(`http://${process.env.TIMBANGAN}/getbinData?hostname=${os.hostname()}`, { withCredentials: false,timeout: 100 });
         const bin = response.data.bin;
             
         const limit = (parseFloat(bin.max_weight) /100) * 100;

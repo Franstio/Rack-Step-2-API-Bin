@@ -1,22 +1,16 @@
 import axios from 'axios';
 import os from 'os';
 import { io } from '../index.js';
-import { writeCmd } from './PLCUtil.js';
+import { QueuePLC } from '../lib/QueueUtil.js';
 
-export const switchLamp = async (id, lampType, isAlive) => {
+export const switchLamp =  (id, lampType, isAlive) => {
     const dict = {
         "RED": 6,
         "YELLOW":7,
         "GREEN": 8
     };
     const address = dict[lampType];
-//    client.setID(1);
-    try {
-        await writeCmd({id:1,address:address,value: isAlive ? 1 : 0});
-    }
-    catch (error) {
-    }
-    await new Promise(resolve => setTimeout(function () { return resolve(); }, 10));
+    QueuePLC.add({id:1,address:address,value: isAlive ? 1 : 0});
 };
 
 export const checkLampRed = async () => {

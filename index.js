@@ -11,6 +11,7 @@ import SensorRoute from "./routes/SensorRoute.js"
 import { Server } from "socket.io";
 import { observeSensor } from "./controllers/ActionSensor.js";
 import { config } from "dotenv";
+import {  QueueConnPLC, QueuePLC, SensorObserveQueue, serverAdapter } from "./lib/QueueUtil.js";
 config();
 const app = express();
 const server = http.createServer(app);
@@ -46,10 +47,15 @@ app.use(LockDoorRoute);
 app.use(LampRoute);
 app.use(SensorRoute);
 app.use(TriggerRack);
-
+app.use('/queues',serverAdapter.getRouter());
 server.listen(port, () => {
+  QueueConnPLC.add({id:1});
+  SensorObserveQueue.add({type:'observe'},{
+    repeat: {every: 1000}
+  });
   console.log(`Server up and running on port ${port}`);
 });
+
 //checkLampYellow();
-observeSensor(io);
+//observeSensor(io);
 export {io};

@@ -1,5 +1,5 @@
+import { QueuePLC } from '../lib/QueueUtil.js';
 import { PushPayload } from './ActionSensor.js';
-import { writeCmd } from './PLCUtil.js';
 
 export const REDLampOn = async (req, res) => {
     try {
@@ -124,10 +124,5 @@ export const switchLamp = async (id, lampType, isAlive) => {
         "YELLOW": 7
     };
     const address = dict[lampType];
-    client.setID(id);
-    try {
-        await writeCmd({id:id,address:address,value: isAlive ? 1 : 0});
-    }
-    catch (error) {
-    }
+    QueuePLC.add({id:id,address:address,value: isAlive ? 1 : 0});
 }

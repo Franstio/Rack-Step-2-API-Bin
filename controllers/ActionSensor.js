@@ -2,6 +2,7 @@ import client from './PLCUtil.js';
 import { io } from '../index.js';
 import { checkLampRed } from './Bin.js';
 import { readCmd, writeCmd } from './PLCUtil.js';
+import { QueuePLC } from '../lib/QueueUtil.js';
 client.setTimeout(3000);
 
 let bottomSensor=null;
@@ -145,24 +146,12 @@ export const observeTopSensorIndicator = async (req, res) => {
 }
 */
 const SensorData = [0,0,0,0,0,0,0];
-let PayloadData = [];
 export const PushPayload =  (data)=>{
     if (!data.id || !data.address || !data.value)
         return;
-    PayloadData.push(data);
+    QueuePLC.add(data);
 }
-const executePayload = async ()=>{
-    const payload = [...PayloadData];
-    PayloadData = [];
-    for (let i=0;i<payload.length;i++)
-    {
-        console.log('--payload--'+JSON.stringify(payload[i]));
-        await writeCmd(payload[i]);
-    }
-    client.setID(1);
-}
-const UpdateSensor = async (index,data,_io)=>{
-    await executePayload();
+export const UpdateSensor = async (index,data,_io)=>{
     if (index < 0 || index > SensorData.length-1)
         return;
     SensorData[index] = data;
@@ -193,8 +182,6 @@ export const observeSensor = async (_io)=>  {
     while(true)
     {
     try {
-        await executePayload();
-        client.setID(1);
 
         
 //        await checkLampRed();

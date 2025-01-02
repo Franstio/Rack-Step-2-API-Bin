@@ -49,7 +49,7 @@ app.use(SensorRoute);
 app.use(TriggerRack);
 app.use('/queues',serverAdapter.getRouter());
 server.listen(port, () => {
- // QueueConnPLC.add({id:1});
+  // QueueConnPLC.add({id:1});
   SensorObserveQueue.add({type:'observe'},{
     repeat: {every: 1000}
   });

@@ -10,7 +10,7 @@ export const switchLamp =  (id, lampType, isAlive) => {
         "GREEN": 8
     };
     const address = dict[lampType];
-    QueuePLC.add({id:1,address:address,value: isAlive ? 1 : 0});
+    QueuePLC.add({id:1,address:address,value: isAlive ? 1 : 0},{removeOnFail:{age: 60*10,count:10},timeout:3000,removeOnComplete:{age:60,count:5}});
 };
 
 export const checkLampRed = async () => {

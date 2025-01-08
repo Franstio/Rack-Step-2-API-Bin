@@ -149,7 +149,7 @@ const SensorData = [0,0,0,0,0,0,0];
 export const PushPayload =  (data)=>{
     if (!data.id || !data.address || !data.value)
         return;
-    QueuePLC.add(data);
+    QueuePLC.add(data,{removeOnFail:{age: 60*10,count:10},timeout:3000,removeOnComplete:{age:60,count:5}});
 }
 export const UpdateSensor = async (index,data,_io)=>{
     if (index < 0 || index > SensorData.length-1)

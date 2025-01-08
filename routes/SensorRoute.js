@@ -12,5 +12,5 @@ router.post('/type',receiveType);
 router.post('/observeBottomSensor',observeBottomSensor);
 router.post('/observeTopSensor', observeTopSensor)
 router.get('/sensorrack', SensorRack);
-router.get('/ping',(req,res)=>res.json({msg:'ok'}));
-export default router;
+router.get('/ping',(req,res)=>res.json({msg:'ok123'}));
+export default router; 

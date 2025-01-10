@@ -1,4 +1,5 @@
 import ModbusRTU from 'modbus-serial';
+import { QueueConnPLC } from '../lib/QueueUtil';
 const client = new ModbusRTU();
 
 export default client;
@@ -14,7 +15,12 @@ export const readCmd =  async (address,val) =>
     catch (err)
     {
         console.log(err);
-        await new Promise((resolve) => setTimeout(resolve,500));
+        if (client.isOpen)
+            client.close(()=>{
+
+                QueueConnPLC.add({id:1},{removeOnFail:{age: 60*10,count:10},timeout:3000,removeOnComplete:{age:60,count:5}});
+            });
+        await new Promise((resolve) => setTimeout(resolve,1000));
         return await readCmd(address,val);
     }
 }

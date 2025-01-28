@@ -36,6 +36,7 @@ export const writeCmd = async (data) => {
     catch(err)
     {
         await closeModbus();
+        console.log(err);
         return {success: false,msg:err?.message || err};
     }
 }

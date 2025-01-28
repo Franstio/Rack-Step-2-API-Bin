@@ -1,4 +1,5 @@
 import ModbusRTU from 'modbus-serial';
+import { SerialPort } from 'serialport';
 let client = new ModbusRTU();
 let sp = null;
 export default client;

@@ -50,9 +50,6 @@ app.use(TriggerRack);
 app.use('/queues',serverAdapter.getRouter());
 server.listen(port, () => {
   // QueueConnPLC.add({id:1});
-  SensorObserveQueue.add({type:'observe'},{
-    /*repeat: {every: 3000},*/removeOnFail:{age: 60*10,count:10},timeout:3000,removeOnComplete:{age:60,count:5}
-  });
   console.log(`Server up and running on port ${port}`);
 });
 

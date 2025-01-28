@@ -14,11 +14,6 @@ export const readCmd =  async (address,val) =>
     catch (err)
     {
         console.log(err);
-        // if (client.isOpen)
-        //     client.close(()=>{
-
-        //         QueueConnPLC.add({id:1},{removeOnFail:{age: 60*10,count:10},timeout:500,removeOnComplete:{age:60,count:5}});
-        //     }); 
         await new Promise((resolve) => setTimeout(resolve,500));
         return await readCmd(address,val);
     }
